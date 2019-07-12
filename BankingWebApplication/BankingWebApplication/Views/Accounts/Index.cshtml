@@ -1,0 +1,113 @@
+﻿@model IEnumerable<DAL.Entities.Account>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@using Microsoft.AspNetCore.Http;
+
+<h2>Account List</h2>
+
+<p>
+    <a asp-action="OpenAccount">Open New Account</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               @Html.DisplayNameFor(model => model.Accountno)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Balance)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerId)
+            </th>
+
+          
+            <th>
+                @Html.DisplayNameFor(model => model.MaturityDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Interestrate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Where( x => x.AccountStatus))
+        {
+            if (Context.Session.GetString("CustomerId") == item.CustomerId.ToString())
+            {
+                <tr>
+                    <td>
+                        <a asp-action="TransactionList" asp-area="Accounts" asp-route-id="@item.Accountno">@Html.DisplayFor(modelItem => item.Accountno)</a> 
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccountType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Balance)
+                    </td>
+
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.customer.CustomerId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MaturityDateTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Interestrate)
+                    </td>
+              
+
+                    <td>
+
+                        @if (item.AccountType == "Loan" && Model
+                            .Where(x => x.AccountStatus &&
+                            x.CustomerId.ToString() == Context.Session.GetString("CustomerId")).Count() >= 2)
+                        {
+                            <a asp-action="PayLoan" asp-route-id="@item.Accountno">Pay Loan</a> <span>|</span>
+                        }
+                        @if (item.AccountType == "Loan")
+                        {
+                            <a asp-action="Delete" asp-route-id="@item.Accountno">Close</a> <span>|</span>
+                            <a asp-action="TransactionRange" asp-route-id="@item.Accountno">Search</a> <span>|</span>
+                        }
+
+
+                        else if (Model
+                            .Where(x => x.AccountStatus &&
+                            x.CustomerId.ToString() == Context.Session.GetString("CustomerId")).Count() >= 1)
+                        {
+                            <a asp-action="Deposit" asp-route-id="@item.Accountno">Deposit</a> <span>|</span>
+                            <a asp-action="Withdraw" asp-route-id="@item.Accountno">Withdraw</a> <span>|</span>
+
+                            <a asp-action="Delete" asp-route-id="@item.Accountno">Close</a> <span>|</span>
+                            <a asp-action="TransactionRange" asp-route-id="@item.Accountno">Search</a> <span>|</span>
+
+                        }
+                        @if (Model
+                            .Where(x => x.AccountStatus &&
+                            x.CustomerId.ToString() == Context.Session.GetString("CustomerId")).Count() >= 2)
+                        {
+                            <a asp-action="Transfer" asp-route-id="@item.Accountno">Transfer</a> <span>|</span>
+                        }
+
+                        
+
+
+
+
+                    </td>
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>

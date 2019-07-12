@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewData["Title"] = "PayLoan";
+}
+
+<link rel="stylesheet" href="~/css/ui.css">
+
+<h2>PayLoan</h2>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PayLoan">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input value="@Model.account.Accountno" name="FromAccountno" disabled="disabled" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label class="control-label"></label>
+                <select name="FromAccountno" class="form-control">
+
+                    @foreach (var item in Model.accounts)
+                    {
+                        if (item.AccountStatus)
+                        {
+                            <option value="@item.Accountno">@item.AccountType | @item.Accountno | @item.Balance</option>
+                        }
+
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Amount</label>
+                <input name="amount" placeholder="Enter Amount" class="form-control" />
+                @*<span asp-validation-for="Amount" class="text-danger"></span>*@
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Process" class="btn btn-default" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
